@@ -28,8 +28,8 @@ class ConsoleLogger(Logger):
 
 
 class DatabaseLogger(Logger):
-    def __init__(self):
-        self.connection = sqlite3.connect('database_logger.db')
+    def __init__(self, dbname):
+        self.connection = sqlite3.connect(dbname)
         self.cursor = self.connection.cursor()
         self.create_table()
 
@@ -53,7 +53,7 @@ class LoggerFactory:
         elif logger_type == 'console':
             return ConsoleLogger()
         elif logger_type == 'database':
-            return DatabaseLogger()
+            return DatabaseLogger(filename)
         else:
             raise ValueError('Invalid logger type')
 
@@ -66,5 +66,6 @@ if __name__ == "__main__":
     console_logger = LoggerFactory.get_logger('console')
     console_logger.log('This is a console log message')
 
-    database_logger = LoggerFactory.get_logger('database')
+    dbname = 'database_logger.db'
+    database_logger = LoggerFactory.get_logger('database', dbname)
     database_logger.log('This is a database log message')
